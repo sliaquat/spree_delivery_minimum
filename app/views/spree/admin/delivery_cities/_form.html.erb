@@ -1,17 +1,14 @@
-
-
 <div data-hook="admin_delivery_city_form_fields">
 
   <div class="row">
     <div data-hook="admin_delivery_city_form_name_fields" class="col-md-6">
-      <%= f.label :name, Spree.t(:name) %>
+      <%= f.label :name, Spree.t(:City) %>
       <span class="required">*</span><br/>
       <%= f.text_field :name, :class => 'form-control' %>
-      <%= error_message_on :delivery_city, :name %>
+      <div style="color: red"><%= error_message_on :delivery_city, :name %></div>
     </div>
 
   </div>
-
 
 
 </div>
