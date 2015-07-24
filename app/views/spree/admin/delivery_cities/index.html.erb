@@ -1,0 +1,32 @@
+<% content_for :page_title do %>
+    <%= Spree.t(:delivery_cities) %>
+<% end %>
+
+<% content_for :page_actions do %>
+    <%= button_link_to Spree.t(:new_delivery_city), new_admin_delivery_city_path, :class => "btn-success", :icon => 'plus' %>
+<% end %>
+
+<table class="table" id="listing_delivery_cities" data-hook>
+  <thead>
+  <tr data-hook="delivery_cities_header">
+    <th><%= Spree.t(:name) %></th>
+    <th><%= Spree.t(:created_at) %></th>
+    <th class="actions"></th>
+  </tr>
+  </thead>
+  <tbody>
+
+<% @delivery_cities.each do |city| %>
+    <tr id="<%= spree_dom_id city %>" data-hook="delivery_cities_row">
+      <td class="align-center"><%= city.name %></td>
+      <td class="align-center"><%=  city.created_at%></td>
+      <td class="actions actions-2 text-right">
+        <%= link_to_edit city, :no_text => true, :class => 'edit' %>
+        &nbsp;
+        <%= link_to_delete city, :no_text => true %>
+      </td>
+
+    </tr>
+<% end %>
+</tbody>
+</table>
