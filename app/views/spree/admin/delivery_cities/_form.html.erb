@@ -1,3 +1,4 @@
+<fieldset class="no-border-top">
 <div data-hook="admin_delivery_city_form_fields">
 
   <div class="row">
@@ -13,4 +14,80 @@
 
 </div>
 
+</fieldset>
+
+
+<div class="row">
+  <div data-hook="admin_delivery_city_form_name_fields" class="col-md-6">
+      <span id="add_new_delivery_area" data-hook>
+        <%= button_link_to Spree.t(:add_delivery_area), "javascript:;", {:icon => 'add', :'data-target' => "tbody#delivery_areas", :class => 'btn-success spree_add_fields'} %>
+      </span>
+  </div>
+</div>
+
+<table class="table table-condensed table-bordered sortable" data-hook data-sortable-link="<%= update_values_positions_admin_option_types_url %>">
+  <thead data-hook="delivery_area_header">
+  <tr>
+    <th colspan="2"><%= Spree.t(:area_name) %></th>
+    <th><%= Spree.t(:minimum_amount) %></th>
+    <th class="actions"></th>
+  </tr>
+  </thead>
+  <tbody id="delivery_areas">
+  <% if @delivery_city.delivery_areas.empty? %>
+      <tr id="none" data-hook="delivery_area_none">
+        <td colspan="2"><%= Spree.t(:none) %></td>
+        <td class="actions text-center"></td>
+      </tr>
+  <% else %>
+      <%= f.fields_for :delivery_areas do |delivery_area_form| %>
+          <tr class="delivery_area fields delivery_area_row" id="spree_<%= dom_id(delivery_area_form.object) %>" data-hook="delivery_area">
+            <td class="move-handle text-center">
+              <span class="icon icon-move handle"></span>
+              <%= delivery_area_form.hidden_field :id %>
+            </td>
+            <td class="name"><%= delivery_area_form.text_field :name, class: "form-control" %></td>
+            <td class="minimum_amount"><%= delivery_area_form.number_field :minimum_amount, class: "form-control" %></td>
+            <td class="actions actions-1 text-center remove_delivery_area"><%= link_to_icon_remove_fields delivery_area_form %></td>
+
+          </tr>
+
+      <% end %>
+  <% end %>
+
+
+  <script>
+      jQuery( document ).ready(function($) {
+
+
+          function hideOrShow(adjustment) {
+
+              var visible_rows_count = $('#delivery_areas').find('.delivery_area_row').filter(function() {
+                  return $(this).css('display') !== 'none';
+              }).length;
+
+              visible_rows_count +=adjustment;
+              if(visible_rows_count == 1 ){
+                  $('#delivery_areas').find('.spree_remove_fields').hide();
+              }
+              else{
+                  $('#delivery_areas').find('.spree_remove_fields').show();
+              }
+          }
+
+          hideOrShow(0);
+
+          $(document).on('click', '.spree_add_fields', function (event) {
+              hideOrShow(0);
+          });
+
+
+          $('#delivery_areas').on('click', '.spree_remove_fields', function (event) {
+              hideOrShow(-1);
+          });
+
+      });
+  </script>
+  </tbody>
+</table>
 

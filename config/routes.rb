@@ -6,6 +6,7 @@ Spree::Core::Engine.routes.draw do
       resources :delivery_areas
     end
 
+    resources :delivery_areas
   end
 
 end

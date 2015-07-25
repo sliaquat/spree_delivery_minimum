@@ -1,6 +1,7 @@
 class Spree::Admin::DeliveryCitiesController < Spree::Admin::ResourceController
 
   def index
+
   end
 
   def new
@@ -9,7 +10,6 @@ class Spree::Admin::DeliveryCitiesController < Spree::Admin::ResourceController
   end
 
   def create
-
     @delivery_city = Spree::DeliveryCity.new(permitted_params)
 
     if(@delivery_city.save)
