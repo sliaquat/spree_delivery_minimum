@@ -1,0 +1,2 @@
+//Called when delivery city is changed from the drop down list. Now update the delivery area drop down list
+$("#delivery_area_col").html("<%= escape_javascript(label_tag :delivery_area, t(:delivery_area), class: "pull-left" ) %> <%= escape_javascript(select("temp", "delivery_area_id", @delivery_areas.collect { |p| [p.name, p.id] }, {selected:cookies[:delivery_area] ? JSON.parse(cookies[:delivery_area])["id"] : nil}, :class => 'form-control')) %>")

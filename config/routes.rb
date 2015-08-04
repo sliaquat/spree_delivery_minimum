@@ -9,6 +9,8 @@ Spree::Core::Engine.routes.draw do
     resources :delivery_areas
   end
 
-  resources :delivery_areas, only: :index
+  resources :delivery_areas, only: :index do
+    get 'save'
+  end
 
 end

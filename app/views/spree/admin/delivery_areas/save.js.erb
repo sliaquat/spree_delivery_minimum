@@ -1,0 +1,5 @@
+//Update all min delivery html references after new delivery location has been set
+$('.cart-min-delivery').html("<%@order_is_above_min = simple_current_order.item_total >=  JSON.parse(cookies[:delivery_area])["minimum_amount"].to_f ? true : false%> <span class='min-delivery-span' data-order-green='<%= @order_is_above_min ? true : false%>' data-order-area='<%= JSON.parse(cookies[:delivery_area])["name"]%>'>*Order min for delivery: <span class='delivery-limit-value-span' style='font-weight: bold; color: <%= @order_is_above_min ? '#1ABC9C' : '#c0392b'%>'><%= Spree::Money.new(JSON.parse(cookies[:delivery_area])["minimum_amount"], { currency: simple_current_order.currency })  %></span></span>")
+
+
+//{"id":17,"name":"Tariq Road","minimum_amount":"5000.0"}
