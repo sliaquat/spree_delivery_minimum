@@ -7,6 +7,7 @@ Spree::Core::Engine.routes.draw do
     end
 
     resources :delivery_areas
+    resource :minimum_delivery_limit_settings, only: [:edit, :update]
   end
 
   resources :delivery_areas, only: :index do

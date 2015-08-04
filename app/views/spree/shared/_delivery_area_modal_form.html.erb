@@ -1,105 +1,92 @@
+<% if Spree::MinimumDeliveryLimitSetting.new[:enabled] %>
+
+    <% @all_delivery_cities = Spree::DeliveryCity.all %>
+    <div data-remodal-id="modal">
+      <button data-remodal-action="close" class="remodal-close"></button>
+      <h1>Select your delivery area </h1>
+
+      <div class="col_full" id="delivery_city_col">
+        <%= label_tag :delivery_city, t(:delivery_city), class: "pull-left" %>
+        <%= select("temp", "delivery_city_id", @all_delivery_cities.collect { |p| [p.name, p.id] }, {selected: cookies[:delivery_area] ? JSON.parse(cookies[:delivery_area])["city_id"] : nil}, :class => 'form-control') %>
+      </div>
+
+      <div class="col_full" id="delivery_area_col">
+
+      </div>
+
+      <i class='fa fa-spinner fa-pulse fa-2x' id="my-modal-form-spinner" style="position: relative; top: -20px;"></i>
+
+      <br>
+      <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
+      <button data-remodal-action="confirm" class="remodal-confirm" id="remodal-ok-button">OK</button>
+    </div>
+
+    <script>
+        $(document).ready(function () {
 
 
+            $('#my-modal-form-spinner').hide()
 
-<% @all_delivery_cities = Spree::DeliveryCity.all %>
-<div data-remodal-id="modal">
-  <button data-remodal-action="close" class="remodal-close"></button>
-  <h1>Select your delivery area </h1>
+            var add_on_ok_button_clicked_handler = function () {
 
-  <div class="col_full" id="delivery_city_col">
-    <%= label_tag :delivery_city, t(:delivery_city), class: "pull-left" %>
-    <%= select("temp", "delivery_city_id", @all_delivery_cities.collect { |p| [p.name, p.id] }, {selected: cookies[:delivery_area] ? JSON.parse(cookies[:delivery_area])["city_id"] : nil}, :class => 'form-control') %>
-</div>
-
-  <div class="col_full" id="delivery_area_col">
-
-  </div>
-
-  <i class='fa fa-spinner fa-pulse fa-2x' id="my-modal-form-spinner" style="position: relative; top: -20px;"></i>
-
-  <br>
-  <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
-  <button data-remodal-action="confirm" class="remodal-confirm" id="remodal-ok-button">OK</button>
-</div>
-
-<script>
-    $(document).ready(function () {
-
-
-
-        $('#my-modal-form-spinner').hide()
-
-        var add_on_ok_button_clicked_handler = function () {
-
-            $('#remodal-ok-button').on('click', function (event) {
-                $.cookie.json = true;
-                var url = '/delivery_areas/' + $('#temp_delivery_area_id option:selected').val() + '/save';
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    dataType: 'script',
-                    success: function () {
+                $('#remodal-ok-button').on('click', function (event) {
+                    $.cookie.json = true;
+                    var url = '/delivery_areas/' + $('#temp_delivery_area_id option:selected').val() + '/save';
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: 'script',
+                        success: function () {
 //                        console.log('saved')
 
 
+                        }
+                    })
+                });
+
+            }
+
+            var on_delivery_city_changed = function () {
+                $('#my-modal-form-spinner').show();
+                $.ajax({
+                    url: '/delivery_areas',
+                    type: "GET",
+                    dataType: 'script',
+                    data: {delivery_city_id: $('#temp_delivery_city_id option:selected').val()},
+                    success: function () {
+                        $("#remodal-ok-button").unbind('click');
+                        $('#my-modal-form-spinner').hide();
+                        add_on_ok_button_clicked_handler();
 
                     }
                 })
+            }
+
+            $(document).on('click', ".add-to-cart", function () {
+
+                if (typeof $.cookie('delivery_area') === 'undefined') {
+                    event.preventDefault();  //prevent form from submitting
+                    var options = {closeOnOutsideClick: false};
+                    var inst = $('[data-remodal-id=modal]').remodal(options);
+                    inst.open();
+                    on_delivery_city_changed();
+                }
+
             });
 
-        }
-
-        var on_delivery_city_changed = function () {
-            $('#my-modal-form-spinner').show();
-            $.ajax({
-                url: '/delivery_areas',
-                type: "GET",
-                dataType: 'script',
-                data: {delivery_city_id: $('#temp_delivery_city_id option:selected').val()},
-                success: function () {
-                    $("#remodal-ok-button").unbind('click');
-                    $('#my-modal-form-spinner').hide();
-                    add_on_ok_button_clicked_handler();
-
-                }
-            })
-        }
+            $('#temp_delivery_city_id').change(on_delivery_city_changed);
 
 
-        var cart_form = $('#cart-form').find('form');
-        cart_form.submit(function (event) {
-
-
-//            if ($.removeCookie('delivery_area', { path: '/' })) {
-//                console.log('Cookie was removed')
-//            } else {
-//                console.log('ERRORRRRR cookie was not removed')
-//            }
-
-
-            if (typeof $.cookie('delivery_area') === 'undefined') {
-                event.preventDefault();  //prevent form from submitting
+            $("#delivery-area-top-link").on('click', function (event) {
                 var options = {closeOnOutsideClick: false};
                 var inst = $('[data-remodal-id=modal]').remodal(options);
                 inst.open();
                 on_delivery_city_changed();
-            }
+            });
+
 
         });
+    </script>
 
-        $('#temp_delivery_city_id').change(on_delivery_city_changed);
-
-
-        $("#location-bar-button, #delivery-area-top-link").on('click', function (event) {
-            var options = {closeOnOutsideClick: false};
-            var inst = $('[data-remodal-id=modal]').remodal(options);
-            inst.open();
-            on_delivery_city_changed();
-        });
-
-
-
-
-    });
-</script>
+<% end %>
 <!--https://github.com/VodkaBears/Remodal#remodal-->

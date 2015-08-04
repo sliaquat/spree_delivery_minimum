@@ -6,6 +6,26 @@
     <%= button_link_to Spree.t(:new_delivery_city), new_admin_delivery_city_path, :class => "btn-success", :icon => 'plus' %>
 <% end %>
 
+<%= form_tag admin_minimum_delivery_limit_settings_path, method: :put do %>
+    <div class="row">
+      <div class="col-md-12" data-hook="reviews">
+        <div class="checkbox">
+          <%= label_tag :enabled do %>
+              <%= preference_field_tag :enabled, Spree::MinimumDeliveryLimitSetting.new[:enabled], type: :boolean %>
+              <%= Spree.t(:enforce_minimum_delivery_amount) %>
+          <% end %>
+        </div>
+
+
+        <div class="form-actions" data-hook="buttons">
+          <%= button Spree.t('actions.update'), 'update' %>
+        </div>
+      </div>
+    </div>
+<% end %>
+
+
+
 <table class="table" id="listing_delivery_cities" data-hook>
   <thead>
   <tr data-hook="delivery_cities_header">
