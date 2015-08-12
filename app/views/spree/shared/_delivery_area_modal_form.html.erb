@@ -5,20 +5,25 @@
       <button data-remodal-action="close" class="remodal-close"></button>
       <h1>Select your delivery area </h1>
 
-      <div class="col_full" id="delivery_city_col">
+      <div class="row" id="delivery_city_col">
         <%= label_tag :delivery_city, t(:delivery_city), class: "pull-left" %>
         <%= select("temp", "delivery_city_id", @all_delivery_cities.collect { |p| [p.name, p.id] }, {selected: cookies[:delivery_area] ? JSON.parse(cookies[:delivery_area])["city_id"] : nil}, :class => 'form-control') %>
       </div>
 
-      <div class="col_full" id="delivery_area_col">
+      <br>
+
+      <div class="row" id="delivery_area_col">
 
       </div>
 
       <i class='fa fa-spinner fa-pulse fa-2x' id="my-modal-form-spinner" style="position: relative; top: -20px;"></i>
 
       <br>
-      <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
-      <button data-remodal-action="confirm" class="remodal-confirm" id="remodal-ok-button">OK</button>
+
+      <div class="row">
+        <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
+        <button data-remodal-action="confirm" class="remodal-confirm" id="remodal-ok-button">OK</button>
+      </div>
     </div>
 
     <script>
@@ -62,7 +67,9 @@
                 })
             }
 
-            $(document).on('click', ".add-to-cart", function () {
+            $(document).on('click', ".add-to-cart, #checkout-link", function (event) {
+
+                console.log("cookies: " + $.cookie('delivery_area'))
 
                 if (typeof $.cookie('delivery_area') === 'undefined') {
                     event.preventDefault();  //prevent form from submitting
@@ -82,6 +89,38 @@
                 var inst = $('[data-remodal-id=modal]').remodal(options);
                 inst.open();
                 on_delivery_city_changed();
+            });
+
+            $("#checkout-link").on('click', function (event) {
+
+
+//            if ($.removeCookie('delivery_area', { path: '/' })) {
+//                console.log('Cookie was removed')
+//            } else {
+//                console.log('ERRORRRRR cookie was not removed')
+//            }
+
+
+                if (typeof $.cookie('delivery_area') !== 'undefined') {
+
+                    var order_green = $(".min-delivery-span").attr("data-order-green") == "true" ? true : false;
+
+                    if (!order_green) {
+
+                        //prevent form from submitting
+                        var delivery_area = $(".min-delivery-span").attr("data-order-area")
+                        var delivery_limit_value = $(".delivery-limit-value-span").text()
+
+                        alert("Minimum order amount has not been met for delivery in " + delivery_area + " area. " +
+                                "Please make sure your order amount is at least " + delivery_limit_value);
+                        event.preventDefault();
+                    }
+                    else {
+                        console.log("order is GREEN")
+                    }
+
+                }
+
             });
 
 
