@@ -14,4 +14,8 @@ Spree::Core::Engine.routes.draw do
     get 'save'
   end
 
+
+  namespace :api, defaults: {format: 'json'} do
+    resources :delivery_cities, only: :index
+  end
 end
